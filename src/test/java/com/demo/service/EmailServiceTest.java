@@ -1,29 +1,58 @@
 package com.demo.service;
+
 import com.demo.domain.Order;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
-import static org.junit.Assert.assertTrue;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class EmailServiceTest {
 
-    private EmailService emailService;
+    @Mock
     private Order order;
 
-    @Before
-    public void setup(){
-        emailService= EmailService.getInstance();
-        order= new Order();
-    }
+    @InjectMocks
+    private EmailService emailService;
+
     @Test
-    public void testSendEmail(){
-        assertTrue(emailService
-                .sendEmail(order,"Order Placed."));
+    public void getInstanceShouldNotReturnNull() {
+        assertNotNull(EmailService.getInstance());
+    }
+
+    @Test
+    public void getInstanceShouldReturnSameInstance() {
+        assertSame(EmailService.getInstance(), EmailService.getInstance());
+    }
+
+    @Test
+    public void getInstanceShouldNotMatchNewInstance() {
+        assertNotSame(EmailService.getInstance(), emailService);
     }
 
     @Test(expected = RuntimeException.class)
-    public void testSendEmailWithoutMessage(){
+    public void sendEmailShouldThrowException() {
         emailService.sendEmail(order);
+    }
+
+    @Test
+    public void sendEmailShouldReturnTrue() {
+        assertTrue(emailService.sendEmail(order, "customer@mail.com"));
+    }
+
+    @Test
+    public void shouldSetCustomerNotifiedWhenEmailSent() {
+        emailService.sendEmail(order, "customer@mail.com");
+        verify(order, times(1)).setCustomerNotified(true);
+    }
+
+    @Test
+    public void shouldNotSetCustomerNotifiedWhenEmailFails() {
+        emailService.sendEmail(order, "customer@mail.com");
+        verify(order, never()).setCustomerNotified(false);
     }
 }
