@@ -2,9 +2,10 @@
 
 This repository contains following service classes for which UnitTesting has to be done:
 * EmailService
-* OrderService
+  - [EmailServiceTest.java](src/test/java/com/demo/service/EmailServiceTest.java)
+* OrderService 
+  - [OrderServiceTest.java](src/test/java/com/demo/service/OrderServiceTest.java)
 
-As a reference, a simple `TestService.java` has been created along with its tes file `TestServiceTest.java`
 
 
 # Resources
